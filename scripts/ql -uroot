@@ -1,0 +1,23 @@
+[0;1;32m●[0m mysqld.service - MySQL 8.0 database server
+   Loaded: loaded (/usr/lib/systemd/system/mysqld.service; enabled; vendor preset: disabled)
+   Active: [0;1;32mactive (running)[0m since Fri 2026-06-05 00:26:04 CST; 6s ago
+  Process: 10382 ExecStartPost=/usr/libexec/mysql-check-upgrade (code=exited, status=0/SUCCESS)
+  Process: 10244 ExecStartPre=/usr/libexec/mysql-prepare-db-dir mysqld.service (code=exited, status=0/SUCCESS)
+  Process: 10213 ExecStartPre=/usr/libexec/mysql-check-socket (code=exited, status=0/SUCCESS)
+ Main PID: 10337 (mysqld)
+   Status: "Server is operational"
+    Tasks: 38 (limit: 47505)
+   Memory: 466.7M
+   CGroup: /system.slice/mysqld.service
+           └─10337 /usr/libexec/mysqld --basedir=/usr
+
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ mysqld[10337]: 2026-06-04T16:26:03.998069Z 0 [System] [MY-010116] [Server] /usr/libexec/mysqld (mysqld 8.0.45) starting as process 10337
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ mysqld[10337]: 2026-06-04T16:26:03.999182Z 0 [Warning] [MY-013242] [Server] --character-set-server: 'utf8' is currently an alias for the character set UTF8MB3, but will be an alias for UTF8MB4 in a future release. Please consider using UTF8MB4 in order to be unambiguous.
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ mysqld[10337]: 2026-06-04T16:26:03.999190Z 0 [Warning] [MY-013244] [Server] --collation-server: 'utf8mb3_general_ci' is a collation of the deprecated character set UTF8MB3. Please consider using UTF8MB4 with an appropriate collation instead.
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ mysqld[10337]: 2026-06-04T16:26:04.009239Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ mysqld[10337]: 2026-06-04T16:26:04.386751Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ mysqld[10337]: 2026-06-04T16:26:04.781057Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ mysqld[10337]: 2026-06-04T16:26:04.781131Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ mysqld[10337]: 2026-06-04T16:26:04.819452Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/lib/mysql/mysqlx.sock
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ mysqld[10337]: 2026-06-04T16:26:04.819694Z 0 [System] [MY-010931] [Server] /usr/libexec/mysqld: ready for connections. Version: '8.0.45'  socket: '/var/lib/mysql/mysql.sock'  port: 3306  Source distribution.
+Jun 05 00:26:04 iZbp16x1s3hl26qymi8lqgZ systemd[1]: Started MySQL 8.0 database server.
