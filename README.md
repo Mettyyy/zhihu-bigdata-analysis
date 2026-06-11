@@ -52,7 +52,7 @@ zuel_bigdata/
 
 ├── sql/                    # 数据库初始化及表结构脚本
 
-│   ├── create_database.sql # 原始表、清洗表及结果看板表的建表语句
+│   └── create_database.sql # 原始表、清洗表及结果看板表的建表语句
 
 ├── web/                    # Flask Web 可视化平台
 
