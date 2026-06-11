@@ -1,143 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 
 <head>
-<meta charset="utf-8">
-
-<title>知乎用户画像分析平台</title>
-
-<link rel="stylesheet"
-href="{{ url_for('static',filename='style.css') }}">
-
-<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知乎用户画像分析平台</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <script src="https://unpkg.com/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://unpkg.com/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
 </head>
 
 <body>
 
-<h1>知乎用户画像大数据分析平台</h1>
+    <h1>知乎用户画像大数据分析平台</h1>
 
-<div class="card total-card">
+    <div class="card total-card">
+        <h2>总用户数</h2>
+        <div class="big-number">{{ total_user }}</div>
+    </div>
 
-<h2>总用户数</h2>
+    <div class="grid">
 
-<div class="big-number">
-{{ total_user }}
-</div>
+        <div class="card">
+            <h2>性别分布</h2>
+            <div id="gender" class="chart"></div>
+        </div>
 
-</div>
+        <div class="card">
+            <h2>回答数分布</h2>
+            <div id="answer" class="chart"></div>
+        </div>
 
-<div class="grid">
+        <div class="card">
+            <h2>发文数分布</h2>
+            <div id="post" class="chart"></div>
+        </div>
 
-<div class="card">
+        <div class="card">
+            <h2>姓氏词云</h2>
+            <div id="wordcloud" class="chart"></div>
+        </div>
 
-<h2>性别分布</h2>
+    </div>
 
-<div id="gender" class="chart"></div>
+    <script>
+        const palette = ['#E9B9AA', '#D98481', '#7892B5', '#8CB9C0', '#91B5A9', '#EDCA7F'];
 
-</div>
+        // ==========================================================================
+        // 1. 性别分布饼图
+        // ==========================================================================
+        echarts.init(document.getElementById('gender')).setOption({
+            color: palette,
+            tooltip: { 
+                trigger: 'item',
+                formatter: '{b}: {c} ({d}%)',
+                textStyle: { fontSize: 16 } // 提示框字体放大
+            },
+            legend: {
+                orient: 'horizontal',
+                bottom: '0%',
+                left: 'center',
+                textStyle: { fontSize: 14 } // 图例字体放大
+            },
+            series: [{
+                name: '性别比例',
+                type: 'pie',
+                radius: '65%',
+                center: ['50%', '45%'],
+                data: {{ gender_data|tojson }},
+                label: {
+                    textStyle: { fontSize: 16 } // 饼图线上文字放大
+                },
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.2)' // 修复：已补全字符串单引号！
+                    }
+                }
+            }]
+        });
 
-<div class="card">
+        // ==========================================================================
+        // 2. 回答数分布直方图
+        // ==========================================================================
+        echarts.init(document.getElementById('answer')).setOption({
+            color: ['#7892B5'],
+            tooltip: { 
+                trigger: 'axis',
+                textStyle: { fontSize: 16 } 
+            },
+            grid: { top: '10%', bottom: '15%', left: '12%', right: '8%' },
+            xAxis: {
+                type: 'category',
+                data: {{ answer_x|tojson }},
+                axisTick: { alignWithLabel: true },
+                axisLabel: { textStyle: { fontSize: 15 } } // X轴坐标字体放大
+            },
+            yAxis: { 
+                type: 'value',
+                axisLabel: { textStyle: { fontSize: 14 } } // Y轴坐标字体放大
+            },
+            series: [{
+                name: '用户数量',
+                type: 'bar',
+                barWidth: '50%',
+                data: {{ answer_y|tojson }}
+            }]
+        });
 
-<h2>回答数分布</h2>
+        // ==========================================================================
+        // 3. 发文数分布直方图
+        // ==========================================================================
+        echarts.init(document.getElementById('post')).setOption({
+            color: ['#91B5A9'],
+            tooltip: { 
+                trigger: 'axis',
+                textStyle: { fontSize: 16 }
+            },
+            grid: { top: '10%', bottom: '15%', left: '12%', right: '8%' },
+            xAxis: {
+                type: 'category',
+                data: {{ post_x|tojson }},
+                axisTick: { alignWithLabel: true },
+                axisLabel: { textStyle: { fontSize: 15 } } // X轴坐标字体放大
+            },
+            yAxis: { 
+                type: 'value',
+                axisLabel: { textStyle: { fontSize: 14 } } // Y轴坐标字体放大
+            },
+            series: [{
+                name: '用户数量',
+                type: 'bar',
+                barWidth: '50%',
+                data: {{ post_y|tojson }}
+            }]
+        });
 
-<div id="answer" class="chart"></div>
+        // ==========================================================================
+        // 4. 纯前端：动态姓氏词云图
+        // ==========================================================================
+        echarts.init(document.getElementById('wordcloud')).setOption({
+            tooltip: { 
+                show: true,
+                textStyle: { fontSize: 16 }
+            },
+            series: [{
+                type: 'wordCloud',
+                shape: 'circle',
+                keepAspect: true,
+                left: 'center',
+                top: 'center',
+                width: '95%',
+                height: '95%',
+                sizeRange: [24, 85], // 显著放大词云字的尺寸范围
+                rotationRange: [-45, 90],
+                rotationStep: 45,
+                gridSize: 12,
+                drawOutOfBound: false,
+                layoutAnimation: true,
+                textStyle: {
+                    fontFamily: 'sans-serif',
+                    fontWeight: 'bold',
+                    color: function () {
+                        return 'rgb(' + [
+                            Math.round(Math.random() * 160),
+                            Math.round(Math.random() * 160),
+                            Math.round(Math.random() * 160)
+                        ].join(',') + ')';
+                    }
+                },
+                emphasis: {
+                    focus: 'self',
+                    textStyle: {
+                        shadowBlur: 10,
+                        shadowColor: '#333'
+                    }
+                },
+                data: {{ surname_data|tojson }}
+            }]
+        });
 
-</div>
-
-<div class="card">
-
-<h2>发文数分布</h2>
-
-<div id="post" class="chart"></div>
-
-</div>
-
-<div class="card">
-
-<h2>姓氏词云</h2>
-
-<img
-src="{{ url_for('static',filename='surname_wordcloud.png') }}"
->
-
-</div>
-
-</div>
-
-<script>
-
-const palette=[
-'#E9B9AA',
-'#D98481',
-'#7892B5',
-'#8CB9C0',
-'#91B5A9',
-'#EDCA7F'
-];
-
-echarts.init(
-document.getElementById('gender')
-).setOption({
-
-color:palette,
-
-tooltip:{trigger:'item'},
-
-series:[{
-type:'pie',
-radius:'65%',
-data:{{ gender_data|tojson }}
-}]
-});
-
-echarts.init(
-document.getElementById('answer')
-).setOption({
-
-color:['#7892B5'],
-
-tooltip:{},
-
-xAxis:{
-type:'category',
-data:{{ answer_x|tojson }}
-},
-
-yAxis:{
-type:'value'
-},
-
-series:[{
-type:'bar',
-data:{{ answer_y|tojson }}
-}]
-});
-
-echarts.init(
-document.getElementById('post')
-).setOption({
-
-color:['#91B5A9'],
-
-tooltip:{},
-
-xAxis:{
-type:'category',
-data:{{ post_x|tojson }}
-},
-
-yAxis:{
-type:'value'
-},
-
-series:[{
-type:'bar',
-data:{{ post_y|tojson }}
-}]
-});
-
-</script>
-
+        // 窗口尺寸自适应
+        window.addEventListener('resize', function () {
+            const instances = [
+                echarts.getInstanceByDom(document.getElementById('gender')),
+                echarts.getInstanceByDom(document.getElementById('answer')),
+                echarts.getInstanceByDom(document.getElementById('post')),
+                echarts.getInstanceByDom(document.getElementById('wordcloud'))
+            ];
+            instances.forEach(chart => { if(chart) chart.resize(); });
+        });
+    </script>
 </body>
+
 </html>
