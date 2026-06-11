@@ -22,19 +22,15 @@ MYSQL_PROPERTIES = {
 
 
 
-spark = SparkSession.builder \
-
-    .appName("ZhihuUserAnalysis") \
-
+spark = (
+    SparkSession.builder
+    .appName("ZhihuUserAnalysis")
     .config(
-
         "spark.jars",
-
         "/opt/zuel_bigdata/jars/mysql-connector-java-8.0.26.jar"
-
-    ) \
-
+    )
     .getOrCreate()
+)
 
 
 

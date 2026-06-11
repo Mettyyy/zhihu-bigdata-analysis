@@ -1,5 +1,15 @@
+__pycache__/
+*.pyc
+
+venv/
+env/
+
+logs/
 *.log
 
-__pycache__/
+web/static/surname_wordcloud.png
 
-*.pyc
+.idea/
+.vscode/
+
+.DS_Store

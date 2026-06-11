@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+
+<title>知乎用户画像分析平台</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static',filename='style.css') }}">
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+</head>
+
+<body>
+
+<h1>知乎用户画像大数据分析平台</h1>
+
+<div class="card total-card">
+
+<h2>总用户数</h2>
+
+<div class="big-number">
+{{ total_user }}
+</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<h2>性别分布</h2>
+
+<div id="gender" class="chart"></div>
+
+</div>
+
+<div class="card">
+
+<h2>回答数分布</h2>
+
+<div id="answer" class="chart"></div>
+
+</div>
+
+<div class="card">
+
+<h2>发文数分布</h2>
+
+<div id="post" class="chart"></div>
+
+</div>
+
+<div class="card">
+
+<h2>姓氏词云</h2>
+
+<img
+src="{{ url_for('static',filename='surname_wordcloud.png') }}"
+>
+
+</div>
+
+</div>
+
+<script>
+
+const palette=[
+'#E9B9AA',
+'#D98481',
+'#7892B5',
+'#8CB9C0',
+'#91B5A9',
+'#EDCA7F'
+];
+
+echarts.init(
+document.getElementById('gender')
+).setOption({
+
+color:palette,
+
+tooltip:{trigger:'item'},
+
+series:[{
+type:'pie',
+radius:'65%',
+data:{{ gender_data|tojson }}
+}]
+});
+
+echarts.init(
+document.getElementById('answer')
+).setOption({
+
+color:['#7892B5'],
+
+tooltip:{},
+
+xAxis:{
+type:'category',
+data:{{ answer_x|tojson }}
+},
+
+yAxis:{
+type:'value'
+},
+
+series:[{
+type:'bar',
+data:{{ answer_y|tojson }}
+}]
+});
+
+echarts.init(
+document.getElementById('post')
+).setOption({
+
+color:['#91B5A9'],
+
+tooltip:{},
+
+xAxis:{
+type:'category',
+data:{{ post_x|tojson }}
+},
+
+yAxis:{
+type:'value'
+},
+
+series:[{
+type:'bar',
+data:{{ post_y|tojson }}
+}]
+});
+
+</script>
+
+</body>
+</html>
