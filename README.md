@@ -38,4 +38,4 @@ python3 app.py
 
 Visit:
 
-http://服务器IP:5000
+http://121.41.94.231:5000
