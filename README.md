@@ -54,8 +54,6 @@ zuel_bigdata/
 
 │   ├── create_database.sql # 原始表、清洗表及结果看板表的建表语句
 
-│   └── init_data.sql       # 原始测试数据导入脚本
-
 ├── web/                    # Flask Web 可视化平台
 
 │   ├── static/
